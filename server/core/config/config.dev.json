@@ -1,0 +1,5 @@
+{
+  "API_URI": "http://localhost:3000",
+  "DATABASE_URI": "mongodb://localhost/competence-laboratory",
+  "API_PORT": "3000"
+}
