@@ -1,7 +1,7 @@
-const userService = require('../services/roaming/user.service');
+const userService = require('../services/db/user.service');
 
 class UserController {
-  registerUser(request, response) {
+  addUser(request, response) {
     userService.createUser().then(
       () => {},
       (error) => {

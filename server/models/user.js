@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-var userSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
   email: {
     type: String,
     unique: true
@@ -18,15 +18,13 @@ var userSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  role: {
-    type: String,
-    enum: ["admin", "employee", "lead", "manager", "department head"],
-    default: "employee",
-    required: true
+  position: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "Position"
   },
-  avatarUrl: {
-    type: String,
-    default: `${CONFIG.get("API_URI")}/user_images/user_default.png`
+  level: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "Level"
   }
 });
 
@@ -38,6 +36,6 @@ userSchema.statics.cryptPassword = function(password) {
   return bcrypt.hashSync(password, 8);
 };
 
-var User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

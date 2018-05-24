@@ -9,12 +9,10 @@ require("./core/globals");
 const db = require("./core/db");
 const passport = require("./core/passport");
 
-const notFoundRoute = require("./routes/notFound.route");
-
 const app = express();
 
 app.use(function(request, response, next) {
-  response.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  response.header("Access-Control-Allow-Origin", "http://localhost:4200");
   response.header("Access-Control-Allow-Credentials", true);
   response.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
   response.header(
@@ -39,8 +37,21 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+const notFoundRoute = require("./routes/notFound.route");
+const userRoute = require("./routes/user.route");
+const authRoute = require("./routes/auth.route");
+const competenceRoute = require("./routes/competence.route");
+const competenceGroupRoute = require("./routes/competenceGroup.route");
+const evaluationRoute = require("./routes/evaluation.route");
+const positionRoute = require("./routes/position.route");
 
 //
+app.use("/user", userRoute);
+app.use("/auth", authRoute);
+app.use("/competence", competenceRoute);
+app.use("/competenceGroup", competenceGroupRoute);
+app.use("/evaluation", evaluationRoute );
+app.use("/position", positionRoute);
 //
 
 app.use(notFoundRoute);

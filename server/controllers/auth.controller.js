@@ -1,4 +1,4 @@
-const userService = require('../services/roaming/user.service');
+const userService = require('../services/db/user.service');
 
 class AuthCotroller {
   logIn(request, response) {
