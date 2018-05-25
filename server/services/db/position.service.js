@@ -1,18 +1,37 @@
 var Position = require('../../models/position');
 
 class PositionService {
-  createPosition() {
-    var newPosition = new Position({});
+  createPosition({
+    positionName
+  }) {
+    var newPosition = new Position({
+      positionName
+    });
     return newPosition.save();
   }
-  readPosition() {
-
+  readPosition(query) {
+    return Position.find(query);
   }
-  UpdatePosition() {
-
+  updatePosition({
+    positionId,
+    positionName
+  }) {
+    return Position.findById(positionId).then(
+      (position) => {
+        position.positionName = positionName;
+        return position.save();
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
   }
-  DeletePosition() {
-
+  deletePosition({
+    positionId
+  }) {
+    return Position.deleteOne({
+      _id: positionId
+    });
   }
 }
 
