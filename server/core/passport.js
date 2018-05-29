@@ -4,29 +4,28 @@ var LocalStrategy = require("passport-local").Strategy;
 var bcrypt = require("bcryptjs");
 
 passport.use(
-  new LocalStrategy(
-    {
+  new LocalStrategy({
       usernameField: "email",
       passwordField: "password"
     },
     function(email, password, done) {
-      User.findOne({ email: email }, function(err, user) {
-        if (err) {
-          return done(err);
-        }
-        if (!user) {
+      User.findOne({
+        "email": email
+      }).then(
+        (user) => {
+          if (!user) {
+            return done(null, false);
+          }
+          if (!user.comparePasswords(password)) {
+            return done(null, false);
+          }
+          return done(null, user);
+        },
+        (error) => {
+          console.log(error);
           return done(null, false);
         }
-        if (!user.comparePasswords(password)) {
-          return done(null, false);
-        }
-        if (!user.verified) {
-          return done(null, false);
-        }
-        user.lastAuthorizationDate = new Date();
-        user.save();
-        return done(null, user);
-      });
+      );
     }
   )
 );

@@ -1,18 +1,39 @@
 var CompetenceGroup = require('../../models/competenceGroup');
 
 class CompetenceGroupService {
-  createCompetenceGroup() {
-    var newCompetenceGroup = new CompetenceGroup({});
+  createCompetenceGroup({
+    competenceGroupName
+  }) {
+    var newCompetenceGroup = new CompetenceGroup({
+      competenceGroupName
+    });
     return newCompetenceGroup.save();
   }
-  readCompetenceGroup() {
-
+  readCompetenceGroup(query) {
+    return CompetenceGroup.find(query).populate("competence");
   }
-  UpdateCompetenceGroup() {
-
+  updateCompetenceGroup({
+    competenceGroupId,
+    competenceGroupName
+  }) {
+    return CompetenceGroup.find({
+      _id: competenceGroupId
+    }).then(
+      (foundCompetenceGroup) => {
+        foundCompetenceGroup.competenceGroupName = competenceGroupName;
+        return foundCompetenceGroup.save();
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    )
   }
-  DeleteCompetenceGroup() {
-
+  deleteCompetenceGroup({
+    competenceGroupId
+  }) {
+    return CompetenceGroup.deleteOne({
+      _id: competenceGroupId
+    });
   }
 }
 
