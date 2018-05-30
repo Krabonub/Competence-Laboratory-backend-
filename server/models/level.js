@@ -5,6 +5,11 @@ const levelSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true
+  },
+  levelIndex:{
+    type:Number,
+    required:true,
+    unique:true,
   }
 });
 

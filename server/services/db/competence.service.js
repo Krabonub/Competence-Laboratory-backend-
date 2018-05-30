@@ -7,20 +7,31 @@ class CompetenceService {
     description,
     competenceGroup
   }) {
-    var newCompetence = new Competence({
-      competenceName,
-      description,
-      competenceGroup
-    });
+    var foundGroup;
     return CompetenceGroup.findById(competenceGroup).then(
       (group) => {
+        var newCompetence = new Competence({
+          competenceName,
+          description,
+          competenceGroup
+        });
+        foundGroup = group;
         return newCompetence.save();
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    ).then(
+      (competence) => {
+        foundGroup.competences.push(competence._id);
+        return foundGroup.save();
       },
       (error) => {
         return Promise.reject(error);
       }
     );
   }
+
   readCompetence({
     query
   }) {
@@ -40,19 +51,38 @@ class CompetenceService {
         comp.competenceName = competenceName ? competenceName : comp.competenceName;
         comp.description = description ? description : comp.description;
         comp.competenceGroup = competenceGroup ? competenceGroup : comp.competenceGroup;
-        return comp.save();
+        group.competences = group.competences.filter((item) => {
+          return item != comp._id;
+        });
+        return Promise.all([comp.save(), group.save()]);
       },
       (error) => {
         return Promise.reject(error);
       }
     );
   }
-  DeleteCompetence({
+  deleteCompetence({
     competenceId
   }) {
-    return Competence.deleteOne({
-      _id: competenceId
-    });
+    return CompetenceGroup.find({
+      "competences": competenceId
+    }).then(
+      (groups) => {
+        var promises = [Competence.deleteOne({
+          _id: competenceId
+        })];
+        groups.forEach((group) => {
+          group.competences = group.competences.filter((item) => {
+            return item != competenceId;
+          });
+          promises.push(group.save());
+        });
+        return Promise.all(promises);
+      },
+      (error) => {
+        Promise.reject(error);
+      }
+    );
   }
 }
 

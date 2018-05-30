@@ -45,6 +45,19 @@ class PositionController {
       }
     );
   }
+  addCompetenceGroup(request, response) {
+    positionService.updatePosition({
+      competenceGroup: request.body.competenceGroup
+    }).then(
+      (position) => {
+        response.send(position);
+      },
+      (error) => {
+        console.log(error);
+        response.status(500).send(position);
+      }
+    );
+  }
 }
 
 module.exports = new PositionController();

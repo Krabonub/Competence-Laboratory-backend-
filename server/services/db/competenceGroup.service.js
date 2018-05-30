@@ -16,7 +16,7 @@ class CompetenceGroupService {
     competenceGroupId,
     competenceGroupName
   }) {
-    return CompetenceGroup.find({
+    return CompetenceGroup.findOne({
       _id: competenceGroupId
     }).then(
       (foundCompetenceGroup) => {
@@ -26,7 +26,7 @@ class CompetenceGroupService {
       (error) => {
         return Promise.reject(error);
       }
-    )
+    );
   }
   deleteCompetenceGroup({
     competenceGroupId

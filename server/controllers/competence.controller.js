@@ -36,7 +36,11 @@ class CompetenceController {
   }
   getCompetencesByGroup(request, response) {
     var query = request.body.query;
-    competenceService.readCompetence(query === "all" ? {} : query).then(
+    competenceService.readCompetence(query === "all" ? {} : {
+      query: {
+        competenceGroup: query
+      }
+    }).then(
       (competences) => {
         response.send(competences);
       },

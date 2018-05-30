@@ -14,11 +14,13 @@ class PositionService {
   }
   updatePosition({
     positionId,
-    positionName
+    positionName,
+    competecneGroup
   }) {
     return Position.findById(positionId).then(
       (position) => {
         position.positionName = positionName;
+        position.competenceGroups.push(competecneGroup);
         return position.save();
       },
       (error) => {
