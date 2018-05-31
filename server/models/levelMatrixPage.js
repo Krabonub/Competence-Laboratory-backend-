@@ -19,12 +19,27 @@ const competenceLevelRequirementSchema = mongoose.Schema({
   }
 });
 
+competenceRequirementGroupSchema = mongoose.Schema({
+  competenceGroup: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "CompetenceGroup",
+    required: true
+  },
+  competenceLevelRequirements: [{
+    type: competenceLevelRequirementSchema,
+    required: true
+  }]
+});
+
 const levelMatrixPageSchema = mongoose.Schema({
   position: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "Position"
   },
-  competenceLevelRequirements: [competenceRequirementSchema]
+  competenceRequirementGroups: [{
+    type: competenceRequirementGroupSchema,
+    required: true
+  }]
 });
 
 const LevelMatrixPage = mongoose.model("LevelMatrixPage", levelMatrixPageSchema);

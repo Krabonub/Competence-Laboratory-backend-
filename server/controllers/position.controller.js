@@ -12,6 +12,7 @@ class PositionController {
       }
     );
   }
+  
   editPosition(request, response) {
     positionService.updatePosition(request.body).then(
       (position) => {
@@ -23,6 +24,7 @@ class PositionController {
       }
     );
   }
+
   deletePosition(request, response) {
     positionService.deletePosition(request.body).then(
       (position) => {
@@ -34,6 +36,7 @@ class PositionController {
       }
     );
   }
+
   getAllPositions(request, response) {
     positionService.readPosition().then(
       (position) => {
@@ -45,8 +48,10 @@ class PositionController {
       }
     );
   }
+
   addCompetenceGroup(request, response) {
-    positionService.updatePosition({
+    positionService.addCompetenceGroupToPosition({
+      positionId: request.body.positionId,
       competenceGroup: request.body.competenceGroup
     }).then(
       (position) => {
@@ -54,7 +59,22 @@ class PositionController {
       },
       (error) => {
         console.log(error);
-        response.status(500).send(position);
+        response.status(500).send(error);
+      }
+    );
+  }
+
+  deleteCompetenceGroup(request, response) {
+    positionService.deleteCompetenceGroupFromPosition({
+      positionId: request.body.positionId,
+      competenceGroup: request.body.competenceGroup
+    }).then(
+      (position) => {
+        response.send(position);
+      },
+      (error) => {
+        console.log(error);
+        response.status(500).send(error);
       }
     );
   }

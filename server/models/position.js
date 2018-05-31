@@ -9,8 +9,7 @@ const positionSchema = mongoose.Schema({
   competenceGroups: [{
     type: mongoose.SchemaTypes.ObjectId,
     ref: "competenceGroup",
-    required: true,
-    unique: true
+    required: true
   }]
 });
 

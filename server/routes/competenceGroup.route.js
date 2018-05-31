@@ -6,6 +6,7 @@ var competenceGroupController = require("../controllers/competenceGroup.controll
 router.post("/add", competenceGroupController.addCompetenceGroup);
 router.post("/edit", competenceGroupController.editCompetenceGroup);
 router.post("/delete", competenceGroupController.deleteCompetenceGroup);
+router.post("/getExcept", competenceGroupController.getExcept)
 router.get("/all", competenceGroupController.getAllCompetenceGroups);
 
 module.exports = router;

@@ -45,6 +45,17 @@ class CompetenceGroupController {
       },
     );
   }
+  getExcept(request, response) {
+    competenceGroupService.readCompetenceGroup().nin("_id", request.body.except).then(
+      (competenceGroups) => {
+        response.send(competenceGroups);
+      },
+      (error) => {
+        console.log(error);
+        response.status(500).send(error);
+      },
+    );
+  }
 }
 
 module.exports = new CompetenceGroupController();

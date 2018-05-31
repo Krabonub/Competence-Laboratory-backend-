@@ -1,30 +1,35 @@
-var LevelMatrixPage = require('../../models/levelMatrixPage');
-var Position = require('../../models/position');
-var Competence = require('../../models/competence');
-var Level = require('../../models/level');
+const LevelMatrixPage = require('../../models/levelMatrixPage');
+const Position = require('../../models/position');
+const Competence = require('../../models/competence');
+const CompetenceGroup = require('../../models/competenceGroup')
+const Level = require('../../models/level');
 
 class LevelMatrixService {
-  createLevelMatrixPage({
+  async createLevelMatrixPage({
     position
   }) {
-    return Position.find({
-      position
-    }).then(
-      (foundPosition) => {
-        return Promise.all([
-          Level.find(),
-          Competence.find()
-        ]);
-        var newLevelMatrixPage = new LevelMatrixPage({
-          position,
-          competenceLevelRequirements: []
+    try {
+      var foundPosition = await Position.findById({
+        position
+      }).populate();
+      if (!foundPosition) {
+        return Promise.reject({
+          message: "Such Position des not exist!"
         });
-        return newLevelMatrixPage.save();
-      },
-      (error) => {
-        return Promise.reject(error);
       }
-    );
+      position.competenceGroups.forEach((group) => {
+        group.competences.forEach((competence) => {
+          ///////////////////////////////////////////////////
+        });
+      });
+      var newLevelMatrixPage = new LevelMatrixPage({
+        position,
+        competenceLevelRequirements: []
+      });
+      return newLevelMatrixPage.save();
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
   readLevelMatrixPage(query) {
     return LevelMatrix.find(query).populate("competence");
