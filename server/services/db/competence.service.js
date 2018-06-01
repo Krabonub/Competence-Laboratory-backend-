@@ -2,87 +2,64 @@ const Competence = require('../../models/competence');
 const CompetenceGroup = require('../../models/competenceGroup');
 
 class CompetenceService {
-  createCompetence({
+  async createCompetence({
     competenceName,
     description,
-    competenceGroup
+    competenceGroupId
   }) {
-    var foundGroup;
-    return CompetenceGroup.findById(competenceGroup).then(
-      (group) => {
-        var newCompetence = new Competence({
-          competenceName,
-          description,
-          competenceGroup
+    try {
+      var group = await CompetenceGroup.findById(competenceGroupId);
+      if (!group) {
+        return Promise.reject({
+          message: "Competence group does not exist!"
         });
-        foundGroup = group;
-        return newCompetence.save();
-      },
-      (error) => {
-        return Promise.reject(error);
       }
-    ).then(
-      (competence) => {
-        foundGroup.competences.push(competence._id);
-        return foundGroup.save();
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
+      var newCompetence = new Competence({
+        competenceName,
+        description,
+        competenceGroup: group._id
+      });
+      return newCompetence.save();
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
-  readCompetence({
+  async readCompetence({
     query
   }) {
     return Competence.find(query).populate("competenceGroup");
   }
-  UpdateCompetence({
+  async UpdateCompetence({
     competenceId,
     competenceName,
     description,
-    competenceGroup
+    competenceGroupId
   }) {
-    return Promise.all([
-      Competence.findById(query),
-      CompetenceGroup.findById(competenceGroup)
-    ]).then(
-      ([comp, group]) => {
-        comp.competenceName = competenceName ? competenceName : comp.competenceName;
-        comp.description = description ? description : comp.description;
-        comp.competenceGroup = competenceGroup ? competenceGroup : comp.competenceGroup;
-        group.competences = group.competences.filter((item) => {
-          return item != comp._id;
+    try {
+      var foundCompetence = await Competence.find(competenceId);
+      if (!foundCompetence) {
+        return Promise.reject({
+          message: "Competence does not exist!"
         });
-        return Promise.all([comp.save(), group.save()]);
-      },
-      (error) => {
-        return Promise.reject(error);
       }
-    );
+      var foundGroup = await Competence.find(competenceGroupId);
+      if (!foundGroup) {
+        return Promise.reject({
+          message: "Competence group does not exist!"
+        });
+      }
+      foundCompetence.competenceName = competenceName ? competenceName : foundCompetence.competenceName;
+      foundCompetence.description = description ? description : foundCompetence.description;
+      foundCompetence.competenceGroup = competenceGroup ? foundGroup._id : foundCompetence.competenceGroup;
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
   deleteCompetence({
     competenceId
   }) {
-    return CompetenceGroup.find({
-      "competences": competenceId
-    }).then(
-      (groups) => {
-        var promises = [Competence.deleteOne({
-          _id: competenceId
-        })];
-        groups.forEach((group) => {
-          group.competences = group.competences.filter((item) => {
-            return item != competenceId;
-          });
-          promises.push(group.save());
-        });
-        return Promise.all(promises);
-      },
-      (error) => {
-        Promise.reject(error);
-      }
-    );
+    return Competence.findByIdAndRemove(competenceId);
   }
 }
 

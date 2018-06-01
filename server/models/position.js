@@ -5,12 +5,7 @@ const positionSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true
-  },
-  competenceGroups: [{
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: "competenceGroup",
-    required: true
-  }]
+  }
 });
 
 const Position = mongoose.model("Position", positionSchema);

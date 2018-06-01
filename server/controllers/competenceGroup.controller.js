@@ -2,7 +2,10 @@ const competenceGroupService = require('../services/db/competenceGroup.service')
 
 class CompetenceGroupController {
   addCompetenceGroup(request, response) {
-    competenceGroupService.createCompetenceGroup(request.body).then(
+    var obj = {
+      competenceGroupName
+    } = request.body;
+    competenceGroupService.createCompetenceGroup(obj).then(
       (competenceGroup) => {
         response.send(competenceGroup);
       },
@@ -13,7 +16,11 @@ class CompetenceGroupController {
     );
   }
   editCompetenceGroup(request, response) {
-    competenceGroupService.updateCompetenceGroup(request.body).then(
+    var obj = {
+      competenceGroupId,
+      competenceGroupName
+    } = request.body;
+    competenceGroupService.updateCompetenceGroup(obj).then(
       (competenceGroup) => {
         response.send(competenceGroup);
       },
@@ -24,7 +31,10 @@ class CompetenceGroupController {
     );
   }
   deleteCompetenceGroup(request, response) {
-    competenceGroupService.deleteCompetenceGroup(request.body).then(
+    var obj = {
+      competenceGroupId
+    } = request.body;
+    competenceGroupService.deleteCompetenceGroup(obj).then(
       (competenceGroup) => {
         response.send(competenceGroup);
       },

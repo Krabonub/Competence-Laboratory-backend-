@@ -5,12 +5,7 @@ const competenceGroupSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true
-  },
-  competences: [{
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: "Competence",
-    required: true
-  }]
+  }
 });
 
 const CompetenceGroup = mongoose.model("CompetenceGroup", competenceGroupSchema);

@@ -2,7 +2,12 @@ const competenceService = require('../services/db/competence.service');
 
 class CompetenceController {
   addCompetence(request, response) {
-    competenceService.createCompetence(request.body).then(
+    var obj = {
+      competenceName,
+      description,
+      competenceGroupId
+    } = request.body;
+    competenceService.createCompetence(obj).then(
       (competence) => {
         response.send(competence);
       },
@@ -12,8 +17,15 @@ class CompetenceController {
       },
     );
   }
+
   editCompetence(request, response) {
-    competenceService.editCompetence(request.body).then(
+    var obj = {
+      competenceId,
+      competenceName,
+      description,
+      competenceGroupId
+    } = request.body;
+    competenceService.editCompetence(obj).then(
       (competence) => {
         response.send(competence);
       },
@@ -23,8 +35,12 @@ class CompetenceController {
       },
     );
   }
+
   deleteCompetence(request, response) {
-    competenceService.deleteCompetence(request.body).then(
+    var obj = {
+      competenceId
+    } = request.body
+    competenceService.deleteCompetence(obj).then(
       (competence) => {
         response.send(competence);
       },
@@ -34,6 +50,7 @@ class CompetenceController {
       },
     );
   }
+
   getCompetencesByGroup(request, response) {
     var query = request.body.query;
     competenceService.readCompetence(query === "all" ? {} : {

@@ -1,8 +1,8 @@
-const levelMatrixService = require('../services/db/levelMatrix.service');
+const competenceLevelRequirementService = require('../services/db/competenceLevelRequirement.service');
 
-class LevelMatrixController {
-  editLevelMatrixPage(request, response) {
-    levelMatrixService.updateLevelMatrixPage(request.body).then(
+class CompetenceLevelRequirementController {
+  editRequirements(request, response) {
+    competenceLevelRequirementService.update(request.body).then(
       (levelMatrixPage) => {
         response.send(levelMatrixPage);
       },
@@ -12,7 +12,7 @@ class LevelMatrixController {
       },
     );
   }
-  getLevelMatrixPage(request, response) {
+  getRequirements(request, response) {
     levelMatrixService.readLevelMatrixPage().then(
       (levelMatrixPage) => {
         response.send(levelMatrixPage);
@@ -25,4 +25,4 @@ class LevelMatrixController {
   }
 }
 
-module.exports = new LevelMatrixController();
+module.exports = new CompetenceLevelRequirementController();

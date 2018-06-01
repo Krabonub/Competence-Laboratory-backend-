@@ -12,7 +12,7 @@ class PositionController {
       }
     );
   }
-  
+
   editPosition(request, response) {
     positionService.updatePosition(request.body).then(
       (position) => {
@@ -38,7 +38,7 @@ class PositionController {
   }
 
   getAllPositions(request, response) {
-    positionService.readPosition().then(
+    positionService.readPositions().then(
       (position) => {
         response.send(position);
       },
@@ -52,7 +52,7 @@ class PositionController {
   addCompetenceGroup(request, response) {
     positionService.addCompetenceGroupToPosition({
       positionId: request.body.positionId,
-      competenceGroup: request.body.competenceGroup
+      competenceGroupId: request.body.competenceGroupId
     }).then(
       (position) => {
         response.send(position);
@@ -67,7 +67,7 @@ class PositionController {
   deleteCompetenceGroup(request, response) {
     positionService.deleteCompetenceGroupFromPosition({
       positionId: request.body.positionId,
-      competenceGroup: request.body.competenceGroup
+      levelRequirementsCompetenceGroupId: request.body.levelRequirementsCompetenceGroupId
     }).then(
       (position) => {
         response.send(position);
@@ -77,6 +77,30 @@ class PositionController {
         response.status(500).send(error);
       }
     );
+  }
+
+  getLevelMatrix(request, response) {
+    positionService.readOnePosition({
+        _id: request.body.positionId
+      })
+      .populate({
+        path: "levelRequirementsCompetenceGroups.competenceGroup"
+      })
+      .populate({
+        path: "levelRequirementsCompetenceGroups.levelRequirementsCompetences.competence"
+      })
+      .populate({
+        path: "levelRequirementsCompetenceGroups.levelRequirementsCompetences.competenceLevelRequirements"
+      })
+      .then(
+        (position) => {
+          response.send(position);
+        },
+        (error) => {
+          console.log(error);
+          response.status(500).send(error);
+        }
+      );
   }
 }
 

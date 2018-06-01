@@ -9,5 +9,6 @@ router.post("/delete", positionController.deletePosition);
 router.get("/all", positionController.getAllPositions);
 router.post("/addCompetenceGroup", positionController.addCompetenceGroup);
 router.post("/deleteCompetenceGroup", positionController.deleteCompetenceGroup);
+router.post("/getLevelMatrix", positionController.getLevelMatrix);
 
 module.exports = router;
