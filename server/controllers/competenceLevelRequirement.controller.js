@@ -1,10 +1,10 @@
 const competenceLevelRequirementService = require('../services/db/competenceLevelRequirement.service');
 
 class CompetenceLevelRequirementController {
-  editRequirements(request, response) {
-    competenceLevelRequirementService.update(request.body).then(
-      (levelMatrixPage) => {
-        response.send(levelMatrixPage);
+  getRequirements(request, response) {
+    competenceLevelRequirementService.read(request.body).then(
+      (requirements) => {
+        response.send(requirements);
       },
       (error) => {
         console.log(error);
@@ -12,10 +12,10 @@ class CompetenceLevelRequirementController {
       },
     );
   }
-  getRequirements(request, response) {
-    levelMatrixService.readLevelMatrixPage().then(
-      (levelMatrixPage) => {
-        response.send(levelMatrixPage);
+  editRequirements(request, response) {
+    competenceLevelRequirementService.update(request.body).then(
+      (requirements) => {
+        response.send(requirements);
       },
       (error) => {
         console.log(error);

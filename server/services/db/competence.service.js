@@ -7,13 +7,9 @@ class CompetenceService {
     description,
     competenceGroupId
   }) {
+    
     try {
       var group = await CompetenceGroup.findById(competenceGroupId);
-      if (!group) {
-        return Promise.reject({
-          message: "Competence group does not exist!"
-        });
-      }
       var newCompetence = new Competence({
         competenceName,
         description,

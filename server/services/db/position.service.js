@@ -10,7 +10,6 @@ class PositionService {
   }) {
     var newPosition = new Position();
     newPosition.positionName = positionName;
-    newPosition.competenceLevelRequirementGroups = [];
     return newPosition.save();
   }
 
@@ -40,9 +39,7 @@ class PositionService {
   deletePosition({
     positionId
   }) {
-    return Position.deleteOne({
-      _id: positionId
-    });
+    return Position.findByIdAndRemove(positionId);
   }
 
   async addCompetenceGroupToPosition({
@@ -50,33 +47,21 @@ class PositionService {
     competenceGroupId
   }) {
     try {
-      var [foundPosition, foundGroup, allLevels] = await Promise.all([
-        Position.findById(positionId),
-        CompetenceGroup.findById(competenceGroupId),
-        Level.find()
-      ]);
-      const levelRequirementsCompetenceGroup = {
-        competenceGroup: foundGroup._id,
-        levelRequirementsCompetences: []
-      };
-      var i = 0;
-      for (let competence of foundGroup.competences) {
-        levelRequirementsCompetenceGroup.levelRequirementsCompetences[i] = {
-          competence,
-          competenceLevelRequirements: []
-        };
-        for (let level of allLevels) {
-          var newReq = await competenceLevelRequirementService.create({
-            level: level,
-            competence: competence,
-            mark: 0
-          });
-          levelRequirementsCompetenceGroup.levelRequirementsCompetences[i].competenceLevelRequirements.push(newReq._id);
+      var foundPosition = await Position.findById(positionId);
+      var foundGroup = await CompetenceGroup.findById(competenceGroupId);
+      if (foundPosition.competenceGroups.indexOf(String(foundGroup._id)) !== -1) {
+        throw {
+          message: "This position already added !"
         }
-        i++;
       }
-      foundPosition.levelRequirementsCompetenceGroups.push(levelRequirementsCompetenceGroup);
-      return foundPosition.save();
+      foundPosition.competenceGroups.push(foundGroup._id);
+      return Promise.all([
+        competenceLevelRequirementService.create({
+          positionId: foundPosition._id,
+          competenceGroupId: foundGroup._id
+        }),
+        foundPosition.save()
+      ]);
     } catch (error) {
       return Promise.reject(error);
     }
@@ -84,24 +69,22 @@ class PositionService {
 
   async deleteCompetenceGroupFromPosition({
     positionId,
-    levelRequirementsCompetenceGroupId
+    competenceGroupId
   }) {
     try {
       var foundPosition = await Position.findById(positionId);
-      var group = foundPosition.levelRequirementsCompetenceGroups.id(levelRequirementsCompetenceGroupId);
-      for (let competence of group.levelRequirementsCompetences) {
-        for (let req of competence.competenceLevelRequirements) {
-          CompetenceLevelRequirement.findByIdAndRemove(req).catch((error) => {
-            console.log(error);
-          });
-        }
-      }
-      group.remove();
-      return foundPosition.save();
+      var foundGroup = await CompetenceGroup.findById(competenceGroupId);
+      foundPosition.competenceGroups.remove(competenceGroupId);
+      return Promise.all([
+        competenceLevelRequirementService.delete({
+          positionId: foundPosition._id,
+          competenceGroupId: foundGroup._id
+        }),
+        foundPosition.save()
+      ]);
     } catch (error) {
       return Promise.reject(error);
     }
   }
 }
-
 module.exports = new PositionService();

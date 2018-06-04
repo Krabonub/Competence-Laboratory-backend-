@@ -2,12 +2,7 @@ const competenceService = require('../services/db/competence.service');
 
 class CompetenceController {
   addCompetence(request, response) {
-    var obj = {
-      competenceName,
-      description,
-      competenceGroupId
-    } = request.body;
-    competenceService.createCompetence(obj).then(
+    competenceService.createCompetence(request.body).then(
       (competence) => {
         response.send(competence);
       },
@@ -19,13 +14,7 @@ class CompetenceController {
   }
 
   editCompetence(request, response) {
-    var obj = {
-      competenceId,
-      competenceName,
-      description,
-      competenceGroupId
-    } = request.body;
-    competenceService.editCompetence(obj).then(
+    competenceService.editCompetence(request.body).then(
       (competence) => {
         response.send(competence);
       },
@@ -37,10 +26,7 @@ class CompetenceController {
   }
 
   deleteCompetence(request, response) {
-    var obj = {
-      competenceId
-    } = request.body
-    competenceService.deleteCompetence(obj).then(
+    competenceService.deleteCompetence(request.body).then(
       (competence) => {
         response.send(competence);
       },

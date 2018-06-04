@@ -2,10 +2,7 @@ const competenceGroupService = require('../services/db/competenceGroup.service')
 
 class CompetenceGroupController {
   addCompetenceGroup(request, response) {
-    var obj = {
-      competenceGroupName
-    } = request.body;
-    competenceGroupService.createCompetenceGroup(obj).then(
+    competenceGroupService.createCompetenceGroup(request.body).then(
       (competenceGroup) => {
         response.send(competenceGroup);
       },

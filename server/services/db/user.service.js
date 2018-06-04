@@ -30,7 +30,7 @@ class UserService {
   readUser(query) {
     return User.find(query).populate("position");
   }
-  updateUser({
+  async updateUser({
     userId,
     firstName,
     lastName,
@@ -38,35 +38,25 @@ class UserService {
     password,
     position
   }) {
-    return Promise.all([
-        User.findById(userId),
-        Position.findOne({
-          positionName: position
-        })
-      ])
-      .then(
-        ([
-          foundUser,
-          foundPosition
-        ]) => {
-          foundUser.email = email ? email : foundUser.email;
-          foundUser.firstName = firstName ? firstName : foundUser.firstName;
-          foundUser.lastName = lastName ? lastName : foundUser.lastName;
-          foundUser.password = password ? User.cryptPassword(password) : foundUser.password;
-          //foundUser.position = position ? foundPosition._id : foundUser.position;
-          return foundUser.save();
-        },
-        (error) => {
-          return Promise.reject(error);
-        }
-      );
+    try {
+      var foundUser = await User.findById(userId);
+      var foundPosition = await Position.findOne({
+        positionName: position
+      });
+      foundUser.email = email ? email : foundUser.email;
+      foundUser.firstName = firstName ? firstName : foundUser.firstName;
+      foundUser.lastName = lastName ? lastName : foundUser.lastName;
+      foundUser.password = password ? User.cryptPassword(password) : foundUser.password;
+      foundUser.position = position ? foundPosition._id : foundUser.position;
+      return foundUser.save();
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
   deleteUser({
     userId
   }) {
-    return User.deleteOne({
-      _id: userId
-    });
+    return User.findByIdAndRemove(userId);
   }
 }
 

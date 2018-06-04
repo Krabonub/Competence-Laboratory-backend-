@@ -45,6 +45,7 @@ const competenceGroupRoute = require("./routes/competenceGroup.route");
 const evaluationRoute = require("./routes/evaluation.route");
 const positionRoute = require("./routes/position.route");
 const levelRoute = require("./routes/level.route");
+const requirementRoute = require("./routes/competenceLevelRequirement.route");
 
 //
 app.use("/user", userRoute);
@@ -53,7 +54,8 @@ app.use("/competence", competenceRoute);
 app.use("/competenceGroup", competenceGroupRoute);
 app.use("/evaluation", evaluationRoute);
 app.use("/position", positionRoute);
-app.use("/level", levelRoute)
+app.use("/level", levelRoute);
+app.use("/requirement", requirementRoute);
 //
 
 app.use(notFoundRoute);
