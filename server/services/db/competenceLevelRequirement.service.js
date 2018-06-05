@@ -18,15 +18,21 @@ class CompetenceLevelRequirementService {
       var allLevels = await Level.find();
       var requirements = [];
       for (let competence of foundCompetences) {
-        for (let level of allLevels) {
-          requirements.push(
-            (new CompetenceLevelRequirement({
-              position: foundPosition._id,
-              competence: competence._id,
-              level: level._id,
-              mark: 0
-            })).save()
-          );
+        var tmpReqs = await CompetenceLevelRequirement.find({
+          competence: competence._id,
+          position: foundPosition._id
+        });
+        if (tmpReqs.length === 0) {
+          for (let level of allLevels) {
+            requirements.push(
+              (new CompetenceLevelRequirement({
+                position: foundPosition._id,
+                competence: competence._id,
+                level: level._id,
+                mark: 0
+              })).save()
+            );
+          }
         }
       }
       return Promise.all(requirements);
@@ -45,18 +51,20 @@ class CompetenceLevelRequirementService {
         path: "competenceGroup"
       }
     });
-    /*for (let item of requirements) {
-      console.log(item);
-    }*/
     return requirements;
   }
-  async update({
-    requirementId,
-    mark
-  }) {
-    var foundRequirement = await CompetenceLevelRequirement.findById(requirementId);
-    foundRequirement.mark = mark;
-    return foundRequirement.save();
+  async update(requirements) {
+    try {
+      var promises = [];
+      for (let req of requirements) {
+        var foundRequirement = await CompetenceLevelRequirement.findById(req._id);
+        foundRequirement.mark = req.mark;
+        promises.push(foundRequirement.save());
+      }
+      return Promise.all(promises);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
   async delete({
     positionId,

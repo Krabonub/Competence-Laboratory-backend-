@@ -1,5 +1,7 @@
 const Competence = require('../../models/competence');
 const CompetenceGroup = require('../../models/competenceGroup');
+const competenceLevelRequirementService = require('./competenceLevelRequirement.service');
+const Position = require('../../models/position');
 
 class CompetenceService {
   async createCompetence({
@@ -7,15 +9,25 @@ class CompetenceService {
     description,
     competenceGroupId
   }) {
-    
     try {
       var group = await CompetenceGroup.findById(competenceGroupId);
+      var positions = await Position.find({
+        competenceGroups: group._id
+      });
+      var promises = [];
+      for (let position of positions) {
+        promises.push(competenceLevelRequirementService.create({
+          positionId: position._id,
+          competenceGroupId: group._id
+        }));
+      }
       var newCompetence = new Competence({
         competenceName,
         description,
         competenceGroup: group._id
       });
-      return newCompetence.save();
+      promises.push(newCompetence.save());
+      return Promise.all(promises);
     } catch (error) {
       return Promise.reject(error);
     }
