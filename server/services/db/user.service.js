@@ -28,7 +28,7 @@ class UserService {
     );
   }
   readUser(query) {
-    return User.find(query).populate("position");
+    return User.find(query);
   }
   async updateUser({
     userId,

@@ -35,7 +35,19 @@ class UserController {
     );
   }
   getAllUsers(request, response) {
-    userService.readUser().then(
+    userService.readUser().populate("position").then(
+      (user) => {
+        response.send(user);
+      },
+      (error) => {
+        console.log(error);
+        response.status(500).send(error);
+      },
+    );
+  }
+  getByQuery(request, response) {
+    var query = request.body;
+    userService.readUser(query).then(
       (user) => {
         response.send(user);
       },

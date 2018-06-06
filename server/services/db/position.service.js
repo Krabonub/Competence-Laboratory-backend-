@@ -51,7 +51,7 @@ class PositionService {
       var foundGroup = await CompetenceGroup.findById(competenceGroupId);
       if (foundPosition.competenceGroups.indexOf(String(foundGroup._id)) !== -1) {
         throw {
-          message: "This position already added !"
+          message: `This competence group is already added to the chosen position!`
         }
       }
       foundPosition.competenceGroups.push(foundGroup._id);
